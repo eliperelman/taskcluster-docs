@@ -8,7 +8,7 @@ Development Setup
 -----------------
 
   1. Install: `npm install`
-  2. Run the webserver: `gulp webserver`
+  2. Run the webserver: `./node_modules/.bin/gulp`
     * Note that it does not auto-reload on change.
 
 Publishing
