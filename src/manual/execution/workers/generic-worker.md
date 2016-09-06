@@ -30,9 +30,39 @@ The payload comprises of a command to run, environment variables to be set
 The worker will run the task, upload log files, and report back status to the
 Queue.
 
-## Building Firefox Desktop for Windows
+## Features
 
-Please see [Building Firefox for Windows™ on Try using
-TaskCluster](http://petemoore.github.io/general/taskcluster/2015/09/30/building-firefox-for-windows-on-try-using-taskcluster.html)
-for a practical walkthrough of using the Generic Worker for building Firefox
-Desktop for Windows™.
+Features are capabilities that can be enabled in the generic worker for use by
+a task.
+
+These features are enabled by declaring them within the task payload in the
+`features` object.
+
+Note: Some features require additional information within the task definition.
+Features may also require scopes.  Consult the documentation for each feature
+to understand the requirements.
+
+Example:
+
+```js
+{
+  "payload": {
+    "features": {
+      "generateCertificate": true
+    }
+  }
+}
+```
+
+#### Feature: `generateCertificate`
+
+Enabling this feature will mean that the generic worker will publish an additional task artifact `public/logs/certificate.json.gpg`. This will be a clear text openpgp-signed json object, storing the SHA 256 hashes of the task artifacts, plus some information about the worker. This is signed by a openpgp private key, both generated and stored on the worker. This private key is never transmitted across the network, and therefore if you are able to verify the signature of this artifact, you can be confident that it really was created by the worker.
+
+Please note that the mechanism to locate the public key of the worker is specific to the worker type, and the workflow of the party that created that worker type (typically the Mozilla Release Engineering Team).
+
+No scopes are presently required for enabling this feature.
+
+References:
+
+* [Bugzilla bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1287112)
+* [Source code](https://github.com/taskcluster/generic-worker/blob/master/chain_of_trust.go)
